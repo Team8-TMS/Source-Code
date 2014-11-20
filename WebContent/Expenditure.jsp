@@ -32,14 +32,17 @@
         	<h2><u>Expenditures for Tournament</u></h2>
 <p>&nbsp;</p>
            	<table border="0" bordercolor="#000033" width="100%">
-           	<tr><td><h3>Sponsor</h3></td>
-           	<td><h3>Amount</h3></td></tr>
+           	<tr><td><h3>Expenditure</h3></td>
+           	<td><h3>Amount</h3></td>
+           	<td><h3>Date</h3></td>
+           	</tr>
            	           	
            	<%
            	wbservice wb=new wbservice();
            	User user=(User)session.getAttribute("User");
            	
            	List<Transaction> trans=wb.getTransactions();
+           	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
            	for(Transaction t: trans){
            		if(t.getTid().hashCode()==user.getTid().hashCode()){
            		if(t.getTransType().equalsIgnoreCase("DB")){	
@@ -48,6 +51,7 @@
            	 %>
            	<tr><td><%=t.getReason()%></td>
            	<td><%=t.getAmount()%></td>
+           	<td><%=format.format(t.getTransDate())%></td>
            	</tr>
            	 
            	<%}}}

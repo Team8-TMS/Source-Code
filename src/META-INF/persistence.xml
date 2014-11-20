@@ -11,6 +11,7 @@
 		<class>com.entities.Tournament</class>
 		<class>com.entities.Transaction</class>
 		<class>com.entities.User</class>
+		<class>com.entities.Report</class>
     
     <shared-cache-mode>NONE</shared-cache-mode>
 		<properties>

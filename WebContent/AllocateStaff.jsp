@@ -41,8 +41,12 @@
            // SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
            	List<Tournament> tour=wb.getTournaments();
            	List<Transaction> trans=wb.getTransactions();
-           	List<Staff> staff=wb.getStaff();
-           	if(null!=staff && staff.size()!=0){%>
+           // List<Salary> roles=user.getTid().getSalaryList();
+           List<Team> teams=user.getTid().getTeamList();
+			List<Staff> stafflist=wb.getStaff();
+           	if(null!=stafflist && stafflist.size()!=0){%>
+           	<form action="/TMC/TMCServlet" method="get" name="allocateStaff">
+				<input type=hidden name="action" value="allocateStaff"/>
            	<table border="0" bordercolor="#000033" width="100%">
            	<tr><td><h3>Staff ID</h3></td>
            	<td><h3>Name</h3></td>
@@ -51,7 +55,9 @@
            	<td><h3>Team</h3></td>
            	</tr>
            	<%
-           	for(Staff s: staff){
+           	for(int j=0;j<stafflist.size();j++){
+           	Staff s=stafflist.get(j);
+           	
            		if(s.getTid().hashCode()==(user.getTid()).hashCode()){
            	 %>
            	 
@@ -59,23 +65,18 @@
            	<td><%=s.getStaffName()%></td>
            	<td><%=(Integer)s.getContactNo() %></td>
            	<td><%=s.getRoleId().getRoleName()%></td>
-           	<td>
-           	          	
-           	<%
-           	if(s.getTeamId()!=null)
-           	{
-           	out.println(s.getTeamId().getTeamName());
-           	}
-           	else
-           	{
-           	out.println("Not Allocated");
-           	}
-           	
-           	%></td>
+           	<td><select name="teamId<%=j%>">
+				    <%for(Team t:teams){ %>
+				    <option value="<%=t.getTeamid()%>"><%=t.getTeamName() %></option>
+				     <%} %>
+				    </select>  	
+           	</td>
            	</tr>
            	
            	<%}}%>
+           	<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td><input size="5" type="submit" value="Allocate Staff" /></td></tr>
            	</table>
+           	</form>
            	<%}
            	else
            	out.println("Currently there are no staff allocated");
@@ -86,15 +87,7 @@
            	<p>&nbsp;</p>
            	<p>&nbsp;</p>
            	
-       	  <!-- <h3>Template Notes</h3>
-       	  <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        	<p>&nbsp;</p>
-		  <h3>More information</h3>
-        	<p> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-       	  <p>&nbsp;</p>
-        	<h3>Template Notes</h3>
-            <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-          <p></p> -->
+       	  
 <p>&nbsp;</p>
         </div>
         <div id="content_bottom"></div>

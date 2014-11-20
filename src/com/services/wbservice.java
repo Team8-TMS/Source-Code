@@ -13,6 +13,8 @@ import javax.servlet.http.HttpSession;
 
 import com.controller.DrawJpaController;
 import com.controller.PlayerJpaController;
+import com.controller.ReportJpaController;
+import com.controller.SalaryJpaController;
 import com.controller.StaffJpaController;
 import com.controller.TeamJpaController;
 import com.controller.TournamentJpaController;
@@ -21,6 +23,8 @@ import com.controller.UserJpaController;
 import com.controller.exceptions.NonexistentEntityException;
 import com.entities.Draw;
 import com.entities.Player;
+import com.entities.Report;
+import com.entities.Salary;
 import com.entities.Staff;
 import com.entities.Team;
 import com.entities.Tournament;
@@ -124,6 +128,17 @@ public class wbservice {
 		
 		
 	}
+	public List<Report> getReport(){
+		
+		ReportJpaController pjc=new ReportJpaController(emf);
+		List<Report> ReportList=new ArrayList<Report>();
+		
+		ReportList=pjc.findReportEntities();
+		System.out.println("size of report"+ReportList.size());
+		return ReportList;
+		
+		
+	}
 	public List<Draw> getDraws(){
 		
 		DrawJpaController djc=new DrawJpaController(emf);
@@ -157,6 +172,37 @@ public class wbservice {
 		
 		
 	}
+	public Salary getSalary(int iRoleId){
+		
+		SalaryJpaController sjc=new SalaryJpaController(emf);
+		List<Salary> salList=new ArrayList<Salary>();
+		Salary s1=new Salary();
+		salList=sjc.findSalaryEntities();
+		
+		for(Salary sal:salList){
+			if(sal.getRoleId()==iRoleId)
+				s1=sal;
+		}
+		return s1;
+		
+		
+		
+	}
+	public Team getTeam(int iTeamId){
+		
+		TeamJpaController tjc=new TeamJpaController(emf);
+		List<Team> teamList=new ArrayList<Team>();
+		Team t1=new Team();
+		teamList=tjc.findTeamEntities();
+		
+		for(Team team:teamList){
+			if(team.getTeamid()==iTeamId)
+				t1=team;
+		}
+		return t1;
+		
+		
+	}
 	
 public List<Transaction> getTransactions(){
 		
@@ -180,6 +226,28 @@ public void editDraw(Draw d) throws NonexistentEntityException, Exception{
 	
 	
 }
+public void editSalary(Salary sal) throws NonexistentEntityException, Exception{
+	
+	SalaryJpaController controller = new SalaryJpaController(emf);
+	
+	
+	controller.edit(sal);
+	System.out.println("success in editing the salary");
+	
+	
+	
+}
+public void editStaff(Staff staff) throws NonexistentEntityException, Exception{
+	
+	StaffJpaController controller = new StaffJpaController(emf);
+	
+	
+	controller.edit(staff);
+	System.out.println("success in editing the staff ");
+	
+	
+	
+}
 
 public List<Staff> getStaff(){
 	
@@ -197,6 +265,16 @@ public void addSponsor(Transaction t1) {
 	try {
 		controller.create(t1);
 		System.out.println("Success");
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
+public void addStaff(Staff s) {
+	StaffJpaController controller = new StaffJpaController(emf);
+	try {
+		controller.create(s);
+		System.out.println("Success in creating staff");
 	} catch (Exception e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();

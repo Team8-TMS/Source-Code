@@ -2,6 +2,7 @@ package com.controller;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +16,10 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.controller.exceptions.NonexistentEntityException;
 import com.entities.Player;
+import com.entities.Salary;
+import com.entities.Staff;
 import com.entities.Team;
 import com.entities.Tournament;
 import com.entities.Transaction;
@@ -198,6 +202,33 @@ else if(action!=null&&action.equalsIgnoreCase("newSponsor")){
 					dispatcher.forward(request,response);
 			
 		}	
+else if(action!=null&&action.equalsIgnoreCase("createStaff")){
+	
+	String sname=request.getParameter("staffname");
+	String staffcontact=request.getParameter("staffcontact");
+	int stcontact=Integer.parseInt(staffcontact);
+	String sroleId=request.getParameter("roleId");
+	int iroleId=Integer.parseInt(sroleId);
+	
+	Salary sal=wb.getSalary(iroleId);
+	
+	
+	Staff s=new Staff();
+	User user=(User)session.getAttribute("User");
+	
+	s.setStaffName(sname);
+	s.setContactNo(stcontact);
+	s.setRoleId(sal);
+	s.setTid(user.getTid());
+	wb.addStaff(s);
+	
+	
+	
+	RequestDispatcher dispatcher =
+			getServletContext().getRequestDispatcher("/SMDashboard.jsp");
+			dispatcher.forward(request,response);
+	
+}	
 		
 			else if(action!=null&&action.equalsIgnoreCase("addExpenditure")){
 				
@@ -338,6 +369,97 @@ else if(action!=null&&action.equalsIgnoreCase("newSponsor")){
 						getServletContext().getRequestDispatcher("/EMDashboard.jsp");
 						dispatcher.forward(request,response);
 				
+			}
+			else if(action!=null&&action.equalsIgnoreCase("updateSalary")){
+				User user=(User)session.getAttribute("User");
+				List<Salary> slist=user.getTid().getSalaryList();
+				for(int j=0;j<slist.size();j++){
+					Salary salary=slist.get(j);
+					String sal=request.getParameter("salary"+j);
+					
+					BigDecimal bg=new BigDecimal(sal);
+					
+					salary.setSalary(bg);
+								try {
+									wb.editSalary(salary);
+								} catch (NonexistentEntityException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+					
+				}
+				
+				
+								
+								RequestDispatcher dispatcher =
+										getServletContext().getRequestDispatcher("/MaintainStaffSalary.jsp");
+										dispatcher.forward(request,response);
+								
+							}
+			else if(action!=null&&action.equalsIgnoreCase("allocateStaff")){
+				User user=(User)session.getAttribute("User");
+				List<Staff> slist=user.getTid().getStaffList();
+				for(int j=0;j<slist.size();j++){
+					Staff staff=slist.get(j);
+					String steamId=request.getParameter("teamId"+j);
+					int iteamId=Integer.parseInt(steamId);
+					Team t=wb.getTeam(iteamId);
+					
+					staff.setTeamId(t);
+					try {
+						wb.editStaff(staff);
+					} catch (NonexistentEntityException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+								
+					
+				}	
+				RequestDispatcher dispatcher =
+				getServletContext().getRequestDispatcher("/SMDashboard.jsp");
+				dispatcher.forward(request,response);
+								
+			}
+			else if(action!=null&&action.equalsIgnoreCase("generateSalary")){
+				User user=(User)session.getAttribute("User");
+				
+				
+				Calendar cSalDate=Calendar.getInstance();
+				String sSalDate=request.getParameter("saldate");
+				try {
+					cSalDate=CalendarUtilityDefault.getCalendarFromString(sSalDate);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				String sMonth=new SimpleDateFormat("MMM").format(cSalDate.getTime());
+				
+				List<Staff> staffList=user.getTid().getStaffList();
+				
+				for(Staff s: staffList){
+					
+				Transaction t1=new Transaction();
+				
+				t1.setReason("Salary for "+s.getStaffName()+" /Month-"+sMonth);
+				t1.setAmount(s.getRoleId().getSalary());
+				t1.setTransDate(cSalDate.getTime());
+				t1.setTid(user.getTid());
+				t1.setTransType("DB");
+				wb.addSponsor(t1);
+				}
+				request.setAttribute("SalaryGeneration","Sucessfully generated salary for staff for month "+sMonth);
+				
+				
+				RequestDispatcher dispatcher =
+				getServletContext().getRequestDispatcher("/MaintainStaffSalary.jsp");
+				dispatcher.forward(request,response);
+								
 			}
 
 

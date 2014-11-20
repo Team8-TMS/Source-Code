@@ -46,7 +46,7 @@
                 	<li><a href="SMDashboard.jsp">Home</a></li>
                     <li><a href="CreateStaff.jsp">Create Staff</a></li>
                     <li><a href="AllocateStaff.jsp">Allocate Staff</a></li>
-                    <li><a href="MaintainSalary.jsp">Staff Maintenance</a></li>
+                    <li><a href="MaintainStaffSalary.jsp">Staff Maintenance</a></li>
                     <li><a href="logout.jsp">Logout</a></li>
                     
                 <%}%>

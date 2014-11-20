@@ -11,6 +11,11 @@ pageEncoding="ISO-8859-1"%>
 		 <%@include file="header.jsp" %>
 <% session.invalidate(); %>
 <p>You have been successfully logout</p>
+<%
+
+response.sendRedirect("login.jsp";)
+
+ %>
 <%@include file="footer.jsp" %>
    </div>
   

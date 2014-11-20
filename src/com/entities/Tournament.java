@@ -38,6 +38,8 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Tournament.findByEnddate", query = "SELECT t FROM Tournament t WHERE t.enddate = :enddate"),
     @NamedQuery(name = "Tournament.findByStatus", query = "SELECT t FROM Tournament t WHERE t.status = :status")})
 public class Tournament implements Serializable {
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tid", fetch = FetchType.LAZY)
+    private List<Report> reportList;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -217,6 +219,14 @@ public class Tournament implements Serializable {
     @Override
     public String toString() {
         return "com.entities.Tournament[ tid=" + tid + " ]";
+    }
+
+    public List<Report> getReportList() {
+        return reportList;
+    }
+
+    public void setReportList(List<Report> reportList) {
+        this.reportList = reportList;
     }
     
 }
